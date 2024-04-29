@@ -80,36 +80,23 @@ class _ProfileState extends State<Profile> {
         ],
         centerTitle: true,
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future:
-          FirebaseFirestore.instance.collection('Users').doc(widget.userId).get(),
-        builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Center(child: Text("Error fetching user details"));
-              }
-    if (snapshot.hasData &&
-    snapshot.data != null &&
-    snapshot.data!.data() != null) {
-    Map<String, dynamic> userData =
-    snapshot.data!.data() as Map<String, dynamic>;
-    return SingleChildScrollView(
-    padding: const EdgeInsets.all(20),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: <Widget>[
-    userData['ImageUrl'] != null
-    ? CircleAvatar(
-    radius: 60,
-    backgroundImage: NetworkImage(userData['ImageUrl']),
-    backgroundColor: Colors.grey.shade300,
-    )
-        : CircleAvatar(
-    radius: 60,
-    backgroundColor: Colors.grey.shade300,
-    child: Icon(Icons.person, size: 60),
-    ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              CircleAvatar(
+                backgroundImage: _profileImageUrl.isNotEmpty
+                    ? NetworkImage(_profileImageUrl)
+                    : AssetImage(profilePic),
+                backgroundColor: primaryColor,
+                maxRadius: 50,
+              ),
+              const SizedBox(height: 10),
               const SizedBox(height: 10),
               Text(
                 '$_firstName $_lastName',
@@ -207,11 +194,7 @@ class _ProfileState extends State<Profile> {
               ),
             ],
           ),
-    );
-    } else {
-    return Center(child: Text("User not found"));
-    }
-    }
+        ),
       ),
     );
   }
