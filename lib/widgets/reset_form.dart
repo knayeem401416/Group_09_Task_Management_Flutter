@@ -74,7 +74,7 @@ class _ResetFormState extends State<ResetForm> {
       decoration: InputDecoration(
         labelText: label,
         suffixIcon: Icon(
-            Icons.visibility_off), // Toggle this based on password visibility
+            Icons.visibility_off),
       ),
     );
   }

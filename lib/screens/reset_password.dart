@@ -11,13 +11,13 @@ class ResetPasswordScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white), // Less than icon
           onPressed: () {
-            // Navigate back to the LoginScreen when pressed
+
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => LogInScreen()));
           },
         ),
         backgroundColor: kPrimaryColor,
-        elevation: 0, // Removes shadow from AppBar
+        elevation: 0,
       ),
       body: Padding(
         padding: kDefaultPadding,

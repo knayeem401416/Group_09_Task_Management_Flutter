@@ -58,7 +58,6 @@ class TaskListScreen extends StatelessWidget {
                     ),
                   );
                 } else {
-                  // Show a default icon or image if no profile image is available
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -95,7 +94,6 @@ class TaskListScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => Statics()),
                 );
               } else if (value == "help") {
-                // Handle Help menu item tap
               }
             },
           ),
@@ -162,7 +160,6 @@ class TaskListScreen extends StatelessWidget {
                             ListTile(
                               leading: Icon(Icons.edit),
                               title: Text('Update Task'),
-// Inside your ListTile's onTap method
                               onTap: () async {
                                 TextEditingController _controller =
                                     TextEditingController(text: doc['name']);
@@ -215,10 +212,9 @@ class TaskListScreen extends StatelessWidget {
                               leading: Icon(Icons.notifications),
                               title: Text('Set Notification'),
                               onTap: () {
-                                // Implement set notification functionality here
 
                                 Navigator.pop(
-                                    context); // Close the bottom sheet after selection
+                                    context);
                               },
                             ),
                             ListTile(
@@ -231,7 +227,7 @@ class TaskListScreen extends StatelessWidget {
                                     .doc(doc.id)
                                     .delete();
                                 Navigator.pop(
-                                    context); // Close the bottom sheet after selection
+                                    context);
                               },
                             ),
                           ],
@@ -273,7 +269,7 @@ class TaskListScreen extends StatelessWidget {
                             ),
                             SizedBox(
                                 height:
-                                    8), // Add some spacing between the title and the tasks
+                                    8),
                             Text(
                               '${completedTasks.length}',
                               style: TextStyle(
@@ -285,7 +281,7 @@ class TaskListScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 20), // Add spacing between the boxes
+                    SizedBox(width: 20),
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.all(1),
@@ -305,7 +301,7 @@ class TaskListScreen extends StatelessWidget {
                             ),
                             SizedBox(
                                 height:
-                                    8), // Add some spacing between the title and the tasks
+                                    8),
                             Text(
                               '${ongoingTasks.length}',
                               style: TextStyle(
@@ -385,9 +381,9 @@ class TaskListScreen extends StatelessWidget {
                             .collection('tasks')
                             .add({
                           'name': taskName,
-                          'status': 'to-do', // default status
+                          'status': 'to-do',
                           'created_at': FieldValue
-                              .serverTimestamp(), // add server timestamp
+                              .serverTimestamp(),
                         });
                         Navigator.pop(context);
                       }

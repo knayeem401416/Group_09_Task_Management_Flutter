@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_management/screens/login.dart';
 import 'package:task_management/screens/signup.dart';
-import 'package:task_management/src/color.dart'; // Assuming it has kPrimaryColor and other style elements.
+import 'package:task_management/src/color.dart';
 
 class HomePage extends StatelessWidget {
   @override
