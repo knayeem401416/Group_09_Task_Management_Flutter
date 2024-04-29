@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                    "assets/close-up-pen-with-notebook.jpg"), // Specify your image path here
+                    "assets/close-up-pen-with-notebook.jpg"),
                 fit: BoxFit.cover,
               ),
             ),

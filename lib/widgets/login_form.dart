@@ -38,7 +38,6 @@ class _LogInFormState extends State<LogInForm> {
             child: TextButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  // Perform Firebase authentication
                   print(
                       "Email: ${emailController.text.trim()}, Password: ${passwordController.text.trim()}");
                   try {
@@ -48,13 +47,11 @@ class _LogInFormState extends State<LogInForm> {
                       password: passwordController.text.trim(),
                     );
                     Navigator.push(
-                        // ignore: use_build_context_synchronously
                         context,
                         MaterialPageRoute(
                             builder: (context) => TaskListScreen(
                                 userId: userCredential.user!.uid)));
                     print("User logged in: ${userCredential.user?.uid}");
-                    // Optionally navigate to another screen here
                   } catch (e) {
                     if (e is FirebaseAuthException) {
                       showLoginError(e, context);
