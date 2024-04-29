@@ -26,7 +26,10 @@ class TaskListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task List'),
+        title: Text(
+          'Task List',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 16.0),
@@ -93,11 +96,11 @@ class TaskListScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (context) => Statics()),
                 );
-              } else if (value == "help") {
-              }
+              } else if (value == "help") {}
             },
           ),
         ],
+        centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
@@ -212,9 +215,7 @@ class TaskListScreen extends StatelessWidget {
                               leading: Icon(Icons.notifications),
                               title: Text('Set Notification'),
                               onTap: () {
-
-                                Navigator.pop(
-                                    context);
+                                Navigator.pop(context);
                               },
                             ),
                             ListTile(
@@ -226,8 +227,7 @@ class TaskListScreen extends StatelessWidget {
                                     .collection('tasks')
                                     .doc(doc.id)
                                     .delete();
-                                Navigator.pop(
-                                    context);
+                                Navigator.pop(context);
                               },
                             ),
                           ],
@@ -267,9 +267,7 @@ class TaskListScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red),
                             ),
-                            SizedBox(
-                                height:
-                                    8),
+                            SizedBox(height: 8),
                             Text(
                               '${completedTasks.length}',
                               style: TextStyle(
@@ -299,9 +297,7 @@ class TaskListScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
-                            SizedBox(
-                                height:
-                                    8),
+                            SizedBox(height: 8),
                             Text(
                               '${ongoingTasks.length}',
                               style: TextStyle(
@@ -382,8 +378,7 @@ class TaskListScreen extends StatelessWidget {
                             .add({
                           'name': taskName,
                           'status': 'to-do',
-                          'created_at': FieldValue
-                              .serverTimestamp(),
+                          'created_at': FieldValue.serverTimestamp(),
                         });
                         Navigator.pop(context);
                       }
