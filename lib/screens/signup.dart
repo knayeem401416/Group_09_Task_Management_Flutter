@@ -10,14 +10,6 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white), // Less than icon
-          onPressed: () {
-            // Navigate back to the LoginScreen when pressed
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => HomePage()));
-          },
-        ),
         backgroundColor: kPrimaryColor,
         elevation: 0,
       ),

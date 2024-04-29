@@ -90,11 +90,10 @@ class _ProfileState extends State<Profile> {
                 height: 20,
               ),
               CircleAvatar(
-                backgroundImage: _profileImageUrl.isNotEmpty
-                    ? NetworkImage(_profileImageUrl)
-                    : AssetImage(profilePic),
                 backgroundColor: primaryColor,
                 maxRadius: 50,
+                backgroundImage: _profileImageUrl.isNotEmpty ? NetworkImage(_profileImageUrl) : null,
+                child: _profileImageUrl.isEmpty ? Icon(Icons.person, size: 50, color: Colors.white70) : null,
               ),
               const SizedBox(height: 10),
               const SizedBox(height: 10),
@@ -200,66 +199,66 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-class ProfilePage extends StatelessWidget {
-  final String userId;
-
-  ProfilePage({required this.userId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-      ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('Users').doc(userId).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return Center(child: Text("Error fetching user details"));
-            }
-            if (snapshot.hasData &&
-                snapshot.data != null &&
-                snapshot.data!.data() != null) {
-              Map<String, dynamic> userData =
-                  snapshot.data!.data() as Map<String, dynamic>;
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    userData['ImageUrl'] != null
-                        ? CircleAvatar(
-                            radius: 60,
-                            backgroundImage: NetworkImage(userData['ImageUrl']),
-                            backgroundColor: Colors.grey.shade300,
-                          )
-                        : CircleAvatar(
-                            radius: 60,
-                            backgroundColor: Colors.grey.shade300,
-                            child: Icon(Icons.person, size: 60),
-                          ),
-                    SizedBox(height: 20),
-                    Text(
-                        "Name: ${userData['FirstName']} ${userData['LastName']}",
-                        style: Theme.of(context).textTheme.headline6),
-                    SizedBox(height: 10),
-                    Text("Email: ${userData['Email']}",
-                        style: Theme.of(context).textTheme.bodyText2),
-                    SizedBox(height: 10),
-                    Text("Phone: ${userData['PhoneNumber']}",
-                        style: Theme.of(context).textTheme.bodyText2),
-                  ],
-                ),
-              );
-            }
-            return Center(child: Text("No user data available"));
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
-  }
-}
+// class ProfilePage extends StatelessWidget {
+//   final String userId;
+//
+//   ProfilePage({required this.userId});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Profile"),
+//       ),
+//       body: FutureBuilder<DocumentSnapshot>(
+//         future:
+//             FirebaseFirestore.instance.collection('Users').doc(userId).get(),
+//         builder:
+//             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+//           if (snapshot.connectionState == ConnectionState.done) {
+//             if (snapshot.hasError) {
+//               return Center(child: Text("Error fetching user details"));
+//             }
+//             if (snapshot.hasData &&
+//                 snapshot.data != null &&
+//                 snapshot.data!.data() != null) {
+//               Map<String, dynamic> userData =
+//                   snapshot.data!.data() as Map<String, dynamic>;
+//               return SingleChildScrollView(
+//                 padding: const EdgeInsets.all(20),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: <Widget>[
+//                     userData['ImageUrl'] != null
+//                         ? CircleAvatar(
+//                             radius: 60,
+//                             backgroundImage: NetworkImage(userData['ImageUrl']),
+//                             backgroundColor: Colors.grey.shade300,
+//                           )
+//                         : CircleAvatar(
+//                             radius: 60,
+//                             backgroundColor: Colors.grey.shade300,
+//                             child: Icon(Icons.person, size: 60),
+//                           ),
+//                     SizedBox(height: 20),
+//                     Text(
+//                         "Name: ${userData['FirstName']} ${userData['LastName']}",
+//                         style: Theme.of(context).textTheme.headline6),
+//                     SizedBox(height: 10),
+//                     Text("Email: ${userData['Email']}",
+//                         style: Theme.of(context).textTheme.bodyText2),
+//                     SizedBox(height: 10),
+//                     Text("Phone: ${userData['PhoneNumber']}",
+//                         style: Theme.of(context).textTheme.bodyText2),
+//                   ],
+//                 ),
+//               );
+//             }
+//             return Center(child: Text("No user data available"));
+//           }
+//           return Center(child: CircularProgressIndicator());
+//         },
+//       ),
+//     );
+//   }
+// }

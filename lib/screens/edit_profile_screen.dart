@@ -133,7 +133,7 @@ class _EditProfileState extends State<EditProfile> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => ProfilePage(userId: widget.userId)),
+                  builder: (context) => Profile(userId: widget.userId)),
             );
           },
           icon: const Icon(LineAwesomeIcons.angle_left),

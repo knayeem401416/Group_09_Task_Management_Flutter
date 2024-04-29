@@ -51,26 +51,6 @@ class HomePage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SignUpScreen()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: kWhiteColor,
-                          backgroundColor: kPrimaryColor, // Text color
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text("Sign Up", style: Buttontext),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => LogInScreen()));
                         },
                         style: ElevatedButton.styleFrom(

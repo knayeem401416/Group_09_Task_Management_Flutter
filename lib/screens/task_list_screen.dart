@@ -9,6 +9,19 @@ class TaskListScreen extends StatelessWidget {
 
   TaskListScreen({required this.userId});
 
+  Future<String?> _fetchUserProfileImageUrl(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .get();
+      return userSnapshot['ImageUrl'] as String?;
+    } catch (e) {
+      print('Failed to fetch user image URL: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,20 +30,51 @@ class TaskListScreen extends StatelessWidget {
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                // Navigate to UserProfilePage
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfilePage(userId: userId)));
+            child: FutureBuilder(
+              future: _fetchUserProfileImageUrl(userId),
+              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey[300],
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  );
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Profile(userId: userId)),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: NetworkImage(snapshot.data!),
+                    ),
+                  );
+                } else {
+                  // Show a default icon or image if no profile image is available
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Profile(userId: userId)),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(Icons.person, color: Colors.white),
+                    ),
+                  );
+                }
               },
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey[300],
-                backgroundImage: NetworkImage(
-                    'https://example.com/user_profile_pic.jpg'), // Placeholder for user profile picture
-              ),
             ),
           ),
           PopupMenuButton(
