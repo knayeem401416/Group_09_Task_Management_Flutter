@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-// import 'UserProfilePage.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class Statics extends StatelessWidget {
   const Statics({Key? key}) : super(key: key);
@@ -38,72 +37,73 @@ class Statics extends StatelessWidget {
               }
             });
 
+            // Pie chart data
+            List<PieChartSectionData> sections = [
+              PieChartSectionData(
+                color: Colors.green,
+                value: countComplete.toDouble(),
+                title: '${(countComplete / (countComplete + countOngoing) * 100).toStringAsFixed(1)}%',
+                titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              PieChartSectionData(
+                color: Colors.red,
+                value: countOngoing.toDouble(),
+                title: '${(countOngoing / (countComplete + countOngoing) * 100).toStringAsFixed(1)}%',
+                titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ];
+
             return Column(
               children: [
-                if (countComplete > 0) ...[
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.red.withOpacity(0.2),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Completed Tasks',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '${countComplete}',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
+                Expanded(
+                  flex: 1,
+                  child: PieChart(
+                    PieChartData(
+                      sections: sections,
+                      centerSpaceRadius: 60,
+                      sectionsSpace: 0,
+                      startDegreeOffset: -90,
                     ),
                   ),
-                ],
-                if (countOngoing > 0) ...[
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blue.withOpacity(0.2),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ongoing Tasks',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '${countOngoing}',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ListView(
+                    children: [
+                      taskStatisticCard('Completed Tasks', countComplete, Colors.green),
+                      taskStatisticCard('Ongoing Tasks', countOngoing, Colors.red),
+                    ],
                   ),
-                ],
+                ),
               ],
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget taskStatisticCard(String title, int count, Color color) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: color.withOpacity(0.2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+          ),
+          SizedBox(height: 4),
+          Text(
+            '$count',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ],
       ),
     );
   }
