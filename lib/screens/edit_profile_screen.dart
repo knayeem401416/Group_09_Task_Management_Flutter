@@ -12,7 +12,9 @@ import '../src/color.dart';
 import '../src/image.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  final String userId;
+
+  EditProfile({required this.userId});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -55,12 +57,13 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  void updateProfile() {
+  void updateProfile() async {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    signInWithEmailAndPassword(email, password).then((_) {
-      String userId = 'Ww3TyGV0FFKffe3ltQ3w';
+    try {
+      await signInWithEmailAndPassword(email, password);
+
       Map<String, dynamic> newData = {
         if (_firstNameController.text.isNotEmpty)
           'FirstName': _firstNameController.text,
@@ -76,17 +79,13 @@ class _EditProfileState extends State<EditProfile> {
 
       FirebaseFirestore.instance
           .collection('Users')
-          .doc(userId)
-          .update(newData)
-          .then((_) {
-        print('Profile updated successfully');
-        _clearForm();
-      }).catchError((error) {
-        print('Failed to update profile: $error');
-      });
-    }).catchError((error) {
-      print('Failed to sign in: $error');
-    });
+          .doc(widget.userId)
+          .update(newData);
+      print('Profile updated successfully');
+      _clearForm();
+    } catch (error) {
+      print('Failed to update profile: $error');
+    }
   }
 
   void _clearForm() {
@@ -133,7 +132,8 @@ class _EditProfileState extends State<EditProfile> {
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const Profile()),
+              MaterialPageRoute(
+                  builder: (context) => ProfilePage(userId: widget.userId)),
             );
           },
           icon: const Icon(LineAwesomeIcons.angle_left),

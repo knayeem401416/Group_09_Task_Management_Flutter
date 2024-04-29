@@ -116,13 +116,6 @@ class _SignUpFormState extends State<SignUpForm> {
                     },
                     title: Text("Select from Gallery"),
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pop(context);
-                      selectImage(ImageSource.camera);
-                    },
-                    title: Text("Take a photo"),
-                  ),
                 ],
               ));
         });

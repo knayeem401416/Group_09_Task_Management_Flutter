@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:task_management/screens/login.dart';
@@ -11,7 +12,9 @@ import '../widgets/profile_screen_menu.dart';
 import 'edit_profile_screen.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final String userId;
+
+  Profile({required this.userId});
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -20,13 +23,13 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-  //final FirebaseStorage _storage = FirebaseStorage.instance;
+  // final FirebaseStorage _storage = FirebaseStorage.instance;
 
   String _firstName = '';
   String _lastName = '';
   String _email = '';
   String _phoneNumber = '';
-  //String _profileImageUrl = '';
+  String _profileImageUrl = '';
 
   @override
   void initState() {
@@ -35,17 +38,16 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _fetchUserData() async {
-    String userId = 'Ww3TyGV0FFKffe3ltQ3w';
     try {
       DocumentSnapshot userSnapshot =
-          await _firestore.collection('Users').doc(userId).get();
+          await _firestore.collection('Users').doc(widget.userId).get();
 
       setState(() {
         _firstName = userSnapshot['FirstName'];
         _lastName = userSnapshot['LastName'];
         _email = userSnapshot['Email'];
         _phoneNumber = userSnapshot['PhoneNumber'];
-        //_profileImageUrl = userSnapshot['ProfilePicture'];
+        _profileImageUrl = userSnapshot['ImageUrl'];
       });
     } catch (error) {
       print('Error fetching user data: $error');
@@ -60,7 +62,8 @@ class _ProfileState extends State<Profile> {
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => TaskListScreen()),
+              MaterialPageRoute(
+                  builder: (context) => TaskListScreen(userId: widget.userId)),
             );
           },
           icon: const Icon(LineAwesomeIcons.angle_left),
@@ -77,24 +80,36 @@ class _ProfileState extends State<Profile> {
         ],
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                width: 120,
-                height: 120,
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(profilePic),
-                  backgroundColor: primaryColor,
-                  maxRadius: 50,
-                ),
-              ),
+      body: FutureBuilder<DocumentSnapshot>(
+        future:
+          FirebaseFirestore.instance.collection('Users').doc(widget.userId).get(),
+        builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Center(child: Text("Error fetching user details"));
+              }
+    if (snapshot.hasData &&
+    snapshot.data != null &&
+    snapshot.data!.data() != null) {
+    Map<String, dynamic> userData =
+    snapshot.data!.data() as Map<String, dynamic>;
+    return SingleChildScrollView(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: <Widget>[
+    userData['ImageUrl'] != null
+    ? CircleAvatar(
+    radius: 60,
+    backgroundImage: NetworkImage(userData['ImageUrl']),
+    backgroundColor: Colors.grey.shade300,
+    )
+        : CircleAvatar(
+    radius: 60,
+    backgroundColor: Colors.grey.shade300,
+    child: Icon(Icons.person, size: 60),
+    ),
               const SizedBox(height: 10),
               Text(
                 '$_firstName $_lastName',
@@ -116,7 +131,8 @@ class _ProfileState extends State<Profile> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) => const EditProfile()),
+                          builder: (context) =>
+                              EditProfile(userId: widget.userId)),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -191,7 +207,75 @@ class _ProfileState extends State<Profile> {
               ),
             ],
           ),
-        ),
+    );
+    } else {
+    return Center(child: Text("User not found"));
+    }
+    }
+      ),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  final String userId;
+
+  ProfilePage({required this.userId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Profile"),
+      ),
+      body: FutureBuilder<DocumentSnapshot>(
+        future:
+            FirebaseFirestore.instance.collection('Users').doc(userId).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Center(child: Text("Error fetching user details"));
+            }
+            if (snapshot.hasData &&
+                snapshot.data != null &&
+                snapshot.data!.data() != null) {
+              Map<String, dynamic> userData =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    userData['ImageUrl'] != null
+                        ? CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(userData['ImageUrl']),
+                            backgroundColor: Colors.grey.shade300,
+                          )
+                        : CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey.shade300,
+                            child: Icon(Icons.person, size: 60),
+                          ),
+                    SizedBox(height: 20),
+                    Text(
+                        "Name: ${userData['FirstName']} ${userData['LastName']}",
+                        style: Theme.of(context).textTheme.headline6),
+                    SizedBox(height: 10),
+                    Text("Email: ${userData['Email']}",
+                        style: Theme.of(context).textTheme.bodyText2),
+                    SizedBox(height: 10),
+                    Text("Phone: ${userData['PhoneNumber']}",
+                        style: Theme.of(context).textTheme.bodyText2),
+                  ],
+                ),
+              );
+            }
+            return Center(child: Text("No user data available"));
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

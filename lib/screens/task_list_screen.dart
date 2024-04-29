@@ -21,9 +21,9 @@ class TaskListScreen extends StatelessWidget {
               onTap: () {
                 // Navigate to UserProfilePage
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Profile()),
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProfilePage(userId: userId)));
               },
               child: CircleAvatar(
                 radius: 20,
