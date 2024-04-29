@@ -92,10 +92,13 @@ class _ProfileState extends State<Profile> {
               CircleAvatar(
                 backgroundColor: primaryColor,
                 maxRadius: 50,
-                backgroundImage: _profileImageUrl.isNotEmpty ? NetworkImage(_profileImageUrl) : null,
-                child: _profileImageUrl.isEmpty ? Icon(Icons.person, size: 50, color: Colors.white70) : null,
+                backgroundImage: _profileImageUrl.isNotEmpty
+                    ? NetworkImage(_profileImageUrl)
+                    : null,
+                child: _profileImageUrl.isEmpty
+                    ? Icon(Icons.person, size: 50, color: Colors.white70)
+                    : null,
               ),
-              const SizedBox(height: 10),
               const SizedBox(height: 10),
               Text(
                 '$_firstName $_lastName',
@@ -141,9 +144,13 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(
+                height: 20,
+              ),
               const Divider(),
-              const SizedBox(height: 10),
+              const SizedBox(
+                height: 10,
+              ),
               ProfileMenuWidget(
                 title: 'Settings & privacy',
                 icon: LineAwesomeIcons.cog,
@@ -198,5 +205,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-

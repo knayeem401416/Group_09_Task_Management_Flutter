@@ -150,7 +150,7 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             children: [
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               Stack(
                 children: [
@@ -196,7 +196,7 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
               Form(
                 child: Column(
@@ -209,7 +209,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     TextFormField(
                       controller: _lastNameController,
@@ -219,7 +219,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     TextFormField(
                       controller: _emailController,
@@ -229,7 +229,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     TextFormField(
                       controller: _phoneNumberController,
@@ -239,7 +239,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     TextFormField(
                       controller: _passwordController,
@@ -253,10 +253,10 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
               SizedBox(
-                height: 65,
+                height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
