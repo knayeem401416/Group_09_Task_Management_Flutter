@@ -150,7 +150,7 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             children: [
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               Stack(
                 children: [
@@ -196,7 +196,7 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
               const SizedBox(
-                height: 20,
+                height: 50,
               ),
               Form(
                 child: Column(
@@ -209,7 +209,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 20,
                     ),
                     TextFormField(
                       controller: _lastNameController,
@@ -219,7 +219,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 20,
                     ),
                     TextFormField(
                       controller: _emailController,
@@ -229,7 +229,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 20,
                     ),
                     TextFormField(
                       controller: _phoneNumberController,
@@ -238,25 +238,14 @@ class _EditProfileState extends State<EditProfile> {
                         prefixIcon: Icon(LineAwesomeIcons.phone),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(LineAwesomeIcons.fingerprint),
-                      ),
-                    ),
                   ],
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 50,
               ),
               SizedBox(
-                height: 50,
+                height: 65,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
