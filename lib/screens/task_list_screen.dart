@@ -28,7 +28,7 @@ class TaskListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Task List',
-          style: Theme.of(context).textTheme.headlineMedium,
+          style: Theme.of(context).textTheme.headline6,
         ),
         actions: <Widget>[
           Padding(
@@ -103,7 +103,7 @@ class TaskListScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
+        stream: FirebaseFirestore.instance.collection('tasks').orderBy('created_at' , descending: true).snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -119,13 +119,16 @@ class TaskListScreen extends StatelessWidget {
             List<Widget> completedTasks = [];
 
             snapshot.data!.docs.forEach((doc) {
+              Timestamp completedAtTimestamp = doc['completed_time']  ?? Timestamp.now();
+              DateTime completedAtTime = completedAtTimestamp.toDate();
+              String formattedCompleted =
+                  '${completedAtTime.day}/${completedAtTime.month}/${completedAtTime.year} ${completedAtTime.hour}:${completedAtTime.minute}';
+
               Timestamp createdAtTimestamp =
                   doc['created_at'] ?? Timestamp.now();
               DateTime createdAt = createdAtTimestamp.toDate();
               String formattedDate =
                   '${createdAt.day}/${createdAt.month}/${createdAt.year} ${createdAt.hour}:${createdAt.minute}';
-              print("Ongoinggg" + ongoingTasks.length.toString());
-              print("Completetaskkk" + completedTasks.length.toString());
 
               ListTile taskTile = ListTile(
                 title: Text(
@@ -135,10 +138,21 @@ class TaskListScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                subtitle: Text(
-                  'Created at: $formattedDate',
-                  style: TextStyle(color: Colors.grey),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Created at: $formattedDate',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    if (doc['completed_time'] != null)
+                      Text(
+                        'Completed at: $formattedCompleted',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                  ],
                 ),
+
                 leading: Checkbox(
                   value: doc['status'] == 'done',
                   onChanged: (value) async {
@@ -147,7 +161,7 @@ class TaskListScreen extends StatelessWidget {
                           .collection('tasks')
                           .doc(doc.id)
                           .update({
-                        'status': value ? 'done' : 'to-do',
+                        'status': value ? 'done' : 'to-do', 'completed_time' : FieldValue.serverTimestamp()
                       });
                     }
                   },
@@ -165,7 +179,7 @@ class TaskListScreen extends StatelessWidget {
                               title: Text('Update Task'),
                               onTap: () async {
                                 TextEditingController _controller =
-                                    TextEditingController(text: doc['name']);
+                                TextEditingController(text: doc['name']);
                                 String updatedTaskName = await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -184,7 +198,7 @@ class TaskListScreen extends StatelessWidget {
                                           },
                                           child: Text('Cancel',
                                               style:
-                                                  TextStyle(color: Colors.red)),
+                                              TextStyle(color: Colors.red)),
                                         ),
                                         TextButton(
                                           onPressed: () {
@@ -238,12 +252,23 @@ class TaskListScreen extends StatelessWidget {
                 },
               );
 
+
+
               if (doc['status'] == 'done') {
                 completedTasks.add(taskTile);
               } else {
                 ongoingTasks.add(taskTile);
               }
             });
+            completedTasks.sort((a, b) {
+              DateTime completedAtTimeA = (a as ListTile).subtitle != null && (a as ListTile).subtitle!.toString().contains("Completed") ? DateTime.parse((a as ListTile).subtitle!.toString().split("Completed at: ")[1]) : DateTime.now();
+              DateTime completedAtTimeB = (b as ListTile).subtitle != null && (b as ListTile).subtitle!.toString().contains("Completed") ? DateTime.parse((b as ListTile).subtitle!.toString().split("Completed at: ")[1]) : DateTime.now();
+
+              return completedAtTimeB.compareTo(completedAtTimeA);
+            });
+
+
+
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,7 +338,7 @@ class TaskListScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     'Ongoing Tasks:',
                     style: TextStyle(
@@ -330,7 +355,7 @@ class TaskListScreen extends StatelessWidget {
                 SizedBox(height: 16),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     'Completed Tasks:',
                     style: TextStyle(
@@ -379,6 +404,7 @@ class TaskListScreen extends StatelessWidget {
                           'name': taskName,
                           'status': 'to-do',
                           'created_at': FieldValue.serverTimestamp(),
+                          'completed_time' : null
                         });
                         Navigator.pop(context);
                       }
