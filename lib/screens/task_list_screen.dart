@@ -264,8 +264,11 @@ class TaskListScreen extends StatelessWidget {
               DateTime completedAtTimeA = (a as ListTile).subtitle != null && (a as ListTile).subtitle!.toString().contains("Completed") ? DateTime.parse((a as ListTile).subtitle!.toString().split("Completed at: ")[1]) : DateTime.now();
               DateTime completedAtTimeB = (b as ListTile).subtitle != null && (b as ListTile).subtitle!.toString().contains("Completed") ? DateTime.parse((b as ListTile).subtitle!.toString().split("Completed at: ")[1]) : DateTime.now();
 
-              return completedAtTimeB.compareTo(completedAtTimeA);
+              return completedAtTimeB.compareTo(completedAtTimeB);
             });
+
+
+
 
 
 
