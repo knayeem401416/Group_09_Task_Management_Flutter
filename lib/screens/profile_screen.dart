@@ -190,9 +190,9 @@ class _ProfileState extends State<Profile> {
                 icon: LineAwesomeIcons.alternate_sign_in,
                 onPress: () async {
                   await auth.signOut();
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                        builder: (context) => const LogInScreen()),
+                        builder: (context) => const LogInScreen()),(route) => false,
                   );
                 },
                 endIcon: false,
